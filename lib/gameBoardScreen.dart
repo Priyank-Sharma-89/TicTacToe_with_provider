@@ -36,7 +36,7 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
             : Center(
                 child: Container(
                   width: double.infinity,
-                  height: screenSize.height * 0.7,
+                  height: screenSize.height * 0.85,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
