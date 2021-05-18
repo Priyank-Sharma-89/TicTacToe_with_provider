@@ -14,7 +14,7 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
       firstSide,
       secondSide,
       currentMove,
-      currentPlayer;
+      playerToWin;
   int moveCounter = 1;
   var cellBlocks = List.filled(9, '');
 
@@ -40,7 +40,6 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
         .getPlayerOneSide;
     secondSide = Provider.of<PlayerInfoProvider>(context, listen: false)
         .getPlayerTwoSide;
-    currentPlayer = firstPlayer;
   }
 
   playerMove(index) {
@@ -56,6 +55,11 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
 
       for (var i = 0; i < winningConditions.length; i++) {
         String symbolEntered = cellBlocks[index];
+        if (symbolEntered == firstSide) {
+          playerToWin = firstPlayer;
+        } else {
+          playerToWin = secondPlayer;
+        }
         if (symbolEntered == cellBlocks[winningConditions[i][0]] &&
             symbolEntered == cellBlocks[winningConditions[i][1]] &&
             symbolEntered == cellBlocks[winningConditions[i][2]]) {
@@ -64,7 +68,7 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
             context: context,
             builder: (ctx) => AlertDialog(
               title: Text(
-                "$currentPlayer Wins!",
+                "$playerToWin Wins!",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 24,
@@ -116,11 +120,6 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
         );
       }
       moveCounter++;
-      if (currentPlayer == firstPlayer) {
-        currentPlayer = secondPlayer;
-      } else if (currentPlayer == secondPlayer) {
-        currentPlayer = firstPlayer;
-      }
     } else
       return;
     setState(() {});
@@ -163,59 +162,38 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Current Player',
-                                  style: getTheme.textTheme.subtitle2,
-                                ),
-                                Text(
-                                  currentPlayer,
-                                  style: getTheme.textTheme.subtitle2,
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            GridView.builder(
-                              shrinkWrap: true,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                crossAxisSpacing: 2.0,
-                                mainAxisSpacing: 2.0,
-                              ),
-                              itemCount: cellBlocks.length,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  child: Container(
-                                    child: Center(
-                                      child: Text(
-                                        cellBlocks[index],
-                                        style: getTheme.textTheme.headline4
-                                            .copyWith(
-                                                fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.black,
-                                      ),
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: Colors.white.withOpacity(0.7),
-                                    ),
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 2.0,
+                            mainAxisSpacing: 2.0,
+                          ),
+                          itemCount: cellBlocks.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              child: Container(
+                                child: Center(
+                                  child: Text(
+                                    cellBlocks[index],
+                                    style: getTheme.textTheme.headline4
+                                        .copyWith(fontWeight: FontWeight.bold),
                                   ),
-                                  onTap: () {
-                                    playerMove(index);
-                                  },
-                                );
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.black,
+                                  ),
+                                  borderRadius: BorderRadius.circular(6),
+                                  color: Colors.white.withOpacity(0.7),
+                                ),
+                              ),
+                              onTap: () {
+                                playerMove(index);
                               },
-                            ),
-                          ],
+                            );
+                          },
                         ),
                       ),
                       GestureDetector(
