@@ -8,7 +8,9 @@ class GameBoardScreen extends StatefulWidget {
 }
 
 class _GameBoardScreenState extends State<GameBoardScreen> {
-  String firstPlayer, secondPlayer, firstSide, secondSide;
+  String firstPlayer, secondPlayer, firstSide, secondSide, currentMove;
+  var cellBlocks = List.filled(9, '');
+
   @override
   void initState() {
     super.initState();
@@ -20,6 +22,20 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
         .getPlayerOneSide;
     secondSide = Provider.of<PlayerInfoProvider>(context, listen: false)
         .getPlayerTwoSide;
+    print('firstSide --- $firstSide');
+    print('secondSide --- $secondSide');
+  }
+
+  playerMove(index) {
+    if (currentMove == null) {
+      currentMove = firstSide;
+    } else if (currentMove == firstSide) {
+      currentMove = secondSide;
+    } else if (currentMove == secondSide) {
+      currentMove = firstSide;
+    }
+    cellBlocks[index] = currentMove;
+    setState(() {});
   }
 
   @override
@@ -57,35 +73,37 @@ class _GameBoardScreenState extends State<GameBoardScreen> {
                               ),
                             ]),
                       ),
-                      GridView(
+                      GridView.builder(
                         shrinkWrap: true,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
                           crossAxisSpacing: 2.0,
                           mainAxisSpacing: 2.0,
                         ),
-                        children: [
-                          for (int index = 0; index < 9; index++)
-                            GestureDetector(
-                              child: Container(
-                                child: Center(
-                                  child: Text(
-                                    '',
-                                    style: getTheme.textTheme.headline4
-                                        .copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.black,
-                                  ),
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: Colors.white.withOpacity(0.7),
+                        itemCount: cellBlocks.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            child: Container(
+                              child: Center(
+                                child: Text(
+                                  cellBlocks[index],
+                                  style: getTheme.textTheme.headline4
+                                      .copyWith(fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              onTap: () {},
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.black,
+                                ),
+                                borderRadius: BorderRadius.circular(6),
+                                color: Colors.white.withOpacity(0.7),
+                              ),
                             ),
-                        ],
+                            onTap: () {
+                              playerMove(index);
+                            },
+                          );
+                        },
                       ),
                       GestureDetector(
                         child: Container(
