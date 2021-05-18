@@ -130,10 +130,6 @@ class _PlayerSelectionScreenState extends State<PlayerSelectionScreen> {
                               onTap: () {
                                 playerInfo.playerOneSide = 'X';
                                 playerInfo.playerTwoSide = 'O';
-                                print(
-                                    'player 1 side -- ${playerInfo.getPlayerOneSide}');
-                                print(
-                                    'player 2 side -- ${playerInfo.getPlayerTwoSide}');
                               },
                             ),
                             SizedBox(
@@ -160,10 +156,6 @@ class _PlayerSelectionScreenState extends State<PlayerSelectionScreen> {
                               onTap: () {
                                 playerInfo.playerOneSide = 'O';
                                 playerInfo.playerTwoSide = 'X';
-                                print(
-                                    'player 1 side -- ${playerInfo.getPlayerOneSide}');
-                                print(
-                                    'player 2 side -- ${playerInfo.getPlayerTwoSide}');
                               },
                             ),
                           ],
